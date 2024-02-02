@@ -9,12 +9,14 @@ local function setup_default()
 	local name = "default"
 	local dir = wezterm.home_dir .. "/Documents/workspace"
 
-	local editor_tab, pane, window = mux.spawn_window({
+	local editor_tab, editor_pane, window = mux.spawn_window({
 		workspace = name,
 		cwd = dir,
 	})
+	print(window)
+
 	editor_tab:set_title("editor")
-	pane:send_text("sp\n")
+	editor_pane:send_text("sp\n")
 
 	local terminal_tab, _, _ = window:spawn_tab({
 		cwd = dir,
@@ -32,12 +34,18 @@ local function setup_dotfiles()
 	local name = "dotfiles"
 	local dir = wezterm.home_dir .. "/dotfiles"
 
-	local editor_tab, pane, window = mux.spawn_window({
+	local editor_tab, editor_pane, window = mux.spawn_window({
 		workspace = name,
 		cwd = dir,
 	})
 	editor_tab:set_title("editor")
-	pane:send_text("nvim\n")
+	editor_pane:send_text("nvim\n")
+
+	local git_tab, git_pane, _ = window:spawn_tab({
+		cwd = dir,
+	})
+	git_tab:set_title("git")
+	git_pane:send_text("lazygit\n")
 
 	local terminal_tab, _, _ = window:spawn_tab({
 		cwd = dir,
