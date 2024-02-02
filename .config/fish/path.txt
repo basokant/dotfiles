@@ -1,0 +1,15 @@
+/Users/basokant/Library/pnpm:/opt/homebrew/opt/postgresql@15/bin:/Users/basokant/.cargo/bin:/Users/basokant/go/bin:/usr/bin
+/usr/local/bin
+/bin
+/usr/sbin
+/sbin
+/opt/homebrew/bin
+/Users/basokant/go/bin
+/usr/local/go/bin
+/Users/basokant/miniconda3/bin
+/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin
+/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin
+/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin
+/Users/basokant/miniconda3/bin
+/Users/basokant/miniconda3/condabin
+:/Users/basokant/miniconda3/bin:/Users/basokant/miniconda3/condabin:/Users/basokant/go/bin:/opt/homebrew/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/usr/local/go/bin:/Library/TeX/texbin:/Users/basokant/.spicetify:/Users/basokant/Library/Python/3.10/bin:/Users/basokant/bin:/opt/homebrew/opt/fzf/bin:/Users/basokant/go//bin

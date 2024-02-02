@@ -1,0 +1,11 @@
+[user]
+	name = basokant
+	email = basokanthan@gmail.com
+[init]
+	defaultBranch = main
+[color]
+	ui = true
+[push]
+	autoSetupRemote = true
+[core]
+  editor = "nvim"
