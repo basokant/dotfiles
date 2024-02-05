@@ -12,15 +12,16 @@ local tab_colors = {
 	"#b4befe",
 }
 
+local basename = function(s)
+	return string.gsub(s, "(.*[/\\])(.*)", "%2")
+end
+
 local function apply_right_status()
 	wezterm.on("update-status", function(window, pane)
 		local workspace = window:active_workspace()
 
-		local basename = function(s)
-			return string.gsub(s, "(.*[/\\])(.*)", "%2")
-		end
 		local cwd = pane:get_current_working_dir()
-		cwd = cwd and basename(cwd) or ""
+		cwd = cwd and basename(cwd.file_path) or ""
 
 		local cmd = pane:get_foreground_process_name()
 		cmd = cmd and basename(cmd) or ""
