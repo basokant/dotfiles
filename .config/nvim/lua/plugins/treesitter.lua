@@ -1,10 +1,12 @@
 vim.filetype.add({
   extension = {
     mdx = "mdx",
+    pcss = "css",
   },
 })
 
 vim.treesitter.language.register("markdown", "mdx")
+vim.treesitter.language.register("css", "pcss")
 
 -- add more treesitter parsers
 return {
@@ -12,6 +14,7 @@ return {
   opts = {
     ensure_installed = {
       "bash",
+      "css",
       "html",
       "javascript",
       "json",
