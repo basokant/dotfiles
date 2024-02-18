@@ -14,7 +14,7 @@ return {
 	["cargo"] = wezterm.nerdfonts.dev_rust,
 	["sudo"] = wezterm.nerdfonts.fa_hashtag,
 	["git"] = wezterm.nerdfonts.dev_git,
-	["lazygit"] = wezterm.nerdfonts.linux_docker,
+	["lazygit"] = wezterm.nerdfonts.dev_git,
 	["lua"] = wezterm.nerdfonts.seti_lua,
 	["wget"] = wezterm.nerdfonts.mdi_arrow_down_box,
 	["curl"] = wezterm.nerdfonts.mdi_flattr,
