@@ -2,6 +2,7 @@ local wezterm = require("wezterm")
 
 local bar = require("bar")
 local k = require("keymaps")
+local zen = require("nvim-zen-mode")
 local workspaces = require("workspaces")
 
 local config = wezterm.config_builder()
@@ -37,6 +38,9 @@ config.scrollback_lines = 3500
 -- Tab bar
 config.use_fancy_tab_bar = false
 bar.setup(config)
+
+-- Zen Mode
+zen.setup()
 
 -- Keys
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
