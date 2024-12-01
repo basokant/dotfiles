@@ -46,5 +46,7 @@ zen.setup()
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
 config.key_tables = k.key_tables
 config.keys = k.keys
+-- -- the option scripture for good option keys™
+-- config.send_composed_key_when_left_alt_is_pressed = true
 
 return config

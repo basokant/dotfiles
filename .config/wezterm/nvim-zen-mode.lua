@@ -1,8 +1,6 @@
 local wezterm = require("wezterm")
 
-local M = {}
-
-M.setup = function()
+local function setup()
 	wezterm.on("user-var-changed", function(window, pane, name, value)
 		local overrides = window:get_config_overrides() or {}
 		if name == "ZEN_MODE" then
@@ -24,4 +22,6 @@ M.setup = function()
 	end)
 end
 
-return M
+return {
+	setup = setup,
+}

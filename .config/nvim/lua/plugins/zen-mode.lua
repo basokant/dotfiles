@@ -2,6 +2,7 @@ return {
   "folke/zen-mode.nvim",
   opts = {
     plugins = {
+      gitsigns = { enabled = true }, -- disables git signs
       wezterm = {
         enabled = true,
         font = "15", -- font size

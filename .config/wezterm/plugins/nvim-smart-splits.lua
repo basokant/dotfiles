@@ -1,7 +1,5 @@
 local wezterm = require("wezterm")
 
-local M = {}
-
 -- if you are *NOT* lazy-loading smart-splits.nvim (recommended)
 local function is_nvim(p)
 	-- this is set by the plugin, and unset on ExitPre in Neovim
@@ -20,7 +18,7 @@ local direction_keys = {
 	l = "Right",
 }
 
-M.nav = function(resize_or_move, key)
+local function setup_nav(resize_or_move, key)
 	return {
 		key = key,
 		mods = resize_or_move == "resize" and "META" or "CTRL",
@@ -41,4 +39,6 @@ M.nav = function(resize_or_move, key)
 	}
 end
 
-return M
+return {
+	nav = setup_nav,
+}

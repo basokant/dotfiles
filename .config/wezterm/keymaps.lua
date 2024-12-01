@@ -2,9 +2,7 @@ local wezterm = require("wezterm")
 local act = wezterm.action
 local split = require("plugins/nvim-smart-splits")
 
-local M = {}
-
-M.keys = {
+local keys = {
 	-- Send C-a when pressing C-a twice
 	{ key = "a", mods = "LEADER|CTRL", action = act.SendKey({ key = "a", mods = "CTRL" }) },
 	{ key = "c", mods = "LEADER", action = act.ActivateCopyMode },
@@ -68,13 +66,29 @@ M.keys = {
 
 	-- Workspace
 	{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
+	{
+		key = "r",
+		mods = "LEADER",
+		action = act.PromptInputLine({
+			description = wezterm.format({
+				{ Attribute = { Intensity = "Bold" } },
+				{ Foreground = { Color = "#f38ba8" } },
+				{ Text = "Renaming Workspace Title...:" },
+			}),
+			action = wezterm.action_callback(function(_, _, line)
+				if line then
+					wezterm.mux.rename_workspace(wezterm.mux.get_active_workspace(), line)
+				end
+			end),
+		}),
+	},
 
 	-- Debug Overlay
 	{ key = "d", mods = "LEADER", action = act.ShowDebugOverlay },
 }
 
 -- Represents the keymaps for modes
-M.key_tables = {
+local key_tables = {
 	resize_pane = {
 		{ key = "h", action = act.AdjustPaneSize({ "Left", 1 }) },
 		{ key = "j", action = act.AdjustPaneSize({ "Down", 1 }) },
@@ -93,4 +107,7 @@ M.key_tables = {
 	},
 }
 
-return M
+return {
+	keys = keys,
+	key_tables = key_tables,
+}

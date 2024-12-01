@@ -1,8 +1,6 @@
 local wezterm = require("wezterm")
 local command_icons = require("utils/command-icons")
 
-local M = {}
-
 local tab_colors = {
 	"#f38ba8",
 	"#fab387",
@@ -91,7 +89,7 @@ local function apply_tab_format()
 	end)
 end
 
-M.setup = function(config)
+local function setup_bar(config)
 	-- Tab bar colour changes
 	config.colors.tab_bar = {
 		background = "#181825",
@@ -116,4 +114,6 @@ M.setup = function(config)
 	apply_tab_format()
 end
 
-return M
+return {
+	setup = setup_bar,
+}

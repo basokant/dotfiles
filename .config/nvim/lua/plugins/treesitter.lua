@@ -36,6 +36,9 @@ return {
       "astro",
       "kdl",
       "ocaml",
+      "gleam",
+      "graphql",
+      "yaml",
     },
   },
 }

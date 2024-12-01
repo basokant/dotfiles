@@ -1,10 +1,8 @@
-local M = {}
-
-local function tableMerge(t1, t2)
+local function table_merge(t1, t2)
 	for k, v in pairs(t2) do
 		if type(v) == "table" then
 			if type(t1[k] or false) == "table" then
-				tableMerge(t1[k] or {}, t2[k] or {})
+				table_merge(t1[k] or {}, t2[k] or {})
 			else
 				t1[k] = v
 			end
@@ -17,7 +15,7 @@ end
 
 -- Print contents of `tbl`, with indentation.
 -- `indent` sets the initial level of indentation.
-local function tablePrint(tbl, indent)
+local function table_print(tbl, indent)
 	if not indent then
 		indent = 0
 	end
@@ -25,7 +23,7 @@ local function tablePrint(tbl, indent)
 		local formatting = string.rep("  ", indent) .. k .. ": "
 		if type(v) == "table" then
 			print(formatting)
-			tablePrint(v, indent + 1)
+			table_print(v, indent + 1)
 		elseif type(v) == "boolean" then
 			print(formatting .. tostring(v))
 		else
@@ -34,7 +32,7 @@ local function tablePrint(tbl, indent)
 	end
 end
 
-M.tableMerge = tableMerge
-M.print = tablePrint
-
-return M
+return {
+	table_merge = table_merge,
+	table_print = table_print,
+}
