@@ -1,3 +1,3 @@
-function lla --wraps='ll -a' --description 'alias lla exa -la --icons'
-    command exa -la --icons $argv
+function lla --wraps='eza -la --icons $argv' --description 'alias lla eza -la --icons'
+    command eza -la --icons $argv
 end

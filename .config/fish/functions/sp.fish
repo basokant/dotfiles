@@ -7,7 +7,6 @@ function sp -d 'Search for a Project to open. Projects are within ~/Documents/wo
     set -l chosen_project (
         begin
             fd --type d --max-depth 1;
-            fd . goprojects/ --type d --max-depth 1;
             fd . tmp/ --type d --max-depth 1;
         end | fzf --preview='head -n 50 | tree {}' --no-height
     )

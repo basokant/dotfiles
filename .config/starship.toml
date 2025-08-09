@@ -1,8 +1,9 @@
-command_timeout = 500
+command_timeout = 150
 
 palette = "catppuccin_mocha"
 
 [aws]
+disabled = true
 symbol = "  "
 
 [buf]

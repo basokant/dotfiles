@@ -27,3 +27,6 @@ map [fullscreen] f toggle_fullscreen
 
 set recolor
 include catppuccin-mocha
+
+# Clippboard
+set selection-clipboard clipboard

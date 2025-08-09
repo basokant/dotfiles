@@ -1,0 +1,7 @@
+gui:
+  sidePanelWidth: 0.2
+  showIcons: true
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"

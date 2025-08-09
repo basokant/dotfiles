@@ -1,4 +1,3 @@
-function ls --wraps=exa --wraps='exa -al --color=always --group-directories-first' --wraps='exa --color=always --group-directories-first' --description 'alias ls exa --color=always --group-directories-first'
-  exa --color=always --group-directories-first $argv
-        
+function ls --wraps=exa --wraps='eza -al --color=always --group-directories-first' --wraps='eza --color=always --group-directories-first' --description 'alias ls eza --color=always --group-directories-first'
+    eza --color=always --group-directories-first $argv
 end

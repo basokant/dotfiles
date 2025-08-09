@@ -11,7 +11,6 @@ local function setup_default()
 	})
 
 	editor_tab:set_title("editor")
-	editor_pane:send_text("sp\n")
 
 	local terminal_tab, _, _ = window:spawn_tab({
 		cwd = dir,
