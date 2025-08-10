@@ -1,2 +1,270 @@
--- bootstrap lazy.nvim, LazyVim and your plugins
-require("config.lazy")
+vim.opt.relativenumber = true
+
+-- Set tab and indentation
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+
+-- Use system clipboard
+vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
+vim.opt.termguicolors = true
+
+vim.g.mapleader = " "
+
+local plugins = {
+  -- Catppuccin theme
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000
+  },
+
+  -- MINI plugins
+  {
+    'echasnovski/mini.nvim',
+    version = false
+  },
+
+  {
+    'stevearc/oil.nvim',
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {},
+    dependencies = { { "echasnovski/mini.icons", opts = {} } },
+    lazy = false,
+  },
+
+  -- TreeSitter
+  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+
+  -- LSP
+  {
+    'mason-org/mason.nvim',
+    opts = function()
+      require("mason").setup()
+    end
+  },                           -- installs LSP servers
+  { 'neovim/nvim-lspconfig' }, -- configures LSPs
+  {
+    'mason-org/mason-lspconfig.nvim',
+    opts = {
+      ensure_installed = {
+        "lua_ls",
+        "stylua",
+        "svelte",
+        "astro",
+        "emmet_language_server",
+        "pico8_ls",
+        "denols",
+      }
+    }
+  }, -- links the two above
+
+  -- Some LSPs don't support formatting, this fills the gaps
+  {
+    'stevearc/conform.nvim',
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" }
+      },
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_format = "fallback",
+      },
+    },
+  },
+
+  -- Snippet collection
+  { "rafamadriz/friendly-snippets" },
+
+  -- Autocomplete engine (LSP, snippets etc)
+  -- https://cmp.saghen.dev/configuration/keymap.html#default
+  {
+    'saghen/blink.cmp',
+    version = '1.*',
+    opts_extend = { "sources.default" },
+    opts = {
+      sources = {
+        -- add lazydev to your completion providers
+        default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+        providers = {
+          lazydev = {
+            name = "LazyDev",
+            module = "lazydev.integrations.blink",
+            -- make lazydev completions top priority (see `:h blink.cmp`)
+            score_offset = 100,
+          },
+        },
+      },
+    },
+  },
+
+  -- Configure LuaLS for NVIM config
+  {
+    "folke/lazydev.nvim",
+    ft = "lua", -- only load on lua files
+    opts = {
+      library = {
+        -- See the configuration section for more details
+        -- Load luvit types when the `vim.uv` word is found
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+      },
+    },
+  },
+}
+
+-- Setup Lazy
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+require("lazy").setup(plugins)
+
+vim.cmd.colorscheme("catppuccin")
+
+require("mini.basics").setup({
+  options = {
+    extra_ui = true,
+  }
+})
+
+require("mini.ai").setup()
+require("mini.comment").setup()
+require("mini.pairs").setup()
+require("mini.surround").setup()
+require("mini.jump").setup()
+require("mini.notify").setup()
+require("mini.bracketed").setup()
+
+require("mini.statusline").setup()
+require("mini.tabline").setup()
+require("mini.diff").setup()
+
+MiniClue = require("mini.clue")
+MiniClue.setup({
+  triggers = {
+    -- Leader triggers
+    { mode = 'n', keys = '<Leader>' },
+    { mode = 'x', keys = '<Leader>' },
+
+    -- Built-in completion
+    { mode = 'i', keys = '<C-x>' },
+
+    -- `g` key
+    { mode = 'n', keys = 'g' },
+    { mode = 'x', keys = 'g' },
+
+    -- Marks
+    { mode = 'n', keys = "'" },
+    { mode = 'n', keys = '`' },
+    { mode = 'x', keys = "'" },
+    { mode = 'x', keys = '`' },
+
+    -- Registers
+    { mode = 'n', keys = '"' },
+    { mode = 'x', keys = '"' },
+    { mode = 'i', keys = '<C-r>' },
+    { mode = 'c', keys = '<C-r>' },
+
+    -- Window commands
+    { mode = 'n', keys = '<C-w>' },
+
+    -- `z` key
+    { mode = 'n', keys = 'z' },
+    { mode = 'x', keys = 'z' },
+
+    -- Bracketed motions (with mini.bracketed)
+    { mode = 'n', keys = '[' },
+    { mode = 'n', keys = ']' },
+    { mode = 'x', keys = '[' },
+    { mode = 'x', keys = ']' },
+  },
+
+  clues = {
+    -- Enhance this by adding descriptions for <Leader> mapping groups
+    MiniClue.gen_clues.builtin_completion(),
+    MiniClue.gen_clues.g(),
+    MiniClue.gen_clues.marks(),
+    MiniClue.gen_clues.registers(),
+    MiniClue.gen_clues.windows(),
+    MiniClue.gen_clues.z(),
+  },
+
+  window = {
+    delay = 200
+  }
+})
+
+vim.keymap.set("n", "<leader>e", require("oil").toggle_float, { desc = "Open parent directory" })
+
+vim.keymap.set("n", "<leader>bd", "<CMD>bd<CR>", { desc = "Close current buffer" })
+
+MiniPick = require("mini.pick")
+
+MiniExtra = require("mini.extra")
+
+-- Centered on screen
+local win_config = function()
+  local height = math.floor(0.618 * vim.o.lines)
+  local width = math.floor(0.618 * vim.o.columns)
+  return {
+    anchor = 'NW',
+    height = height,
+    width = width,
+    row = math.floor(0.5 * (vim.o.lines - height)),
+    col = math.floor(0.5 * (vim.o.columns - width)),
+  }
+end
+
+MiniPick.setup({
+  window = { config = win_config },
+})
+
+-- Override Select with MiniPick
+---@diagnostic disable-next-line: duplicate-set-field
+vim.ui.select = MiniPick.ui_select
+
+-- Pickers
+vim.keymap.set("n", "<leader>ff", MiniPick.builtin.files, { desc = "(f)ind (f)ile" })
+vim.keymap.set("n", "<leader>fe", MiniExtra.pickers.explorer, { desc = "(f)ind (e)xplorer" })
+vim.keymap.set("n", "<leader>/", MiniPick.builtin.grep_live, { desc = "Live Grep" })
+vim.keymap.set("n", "<leader>fb", MiniPick.builtin.buffers, { desc = "(f)ind (b)uffer" })
+vim.keymap.set("n", "<leader>sh", MiniPick.builtin.help, { desc = "(s)earch (h)elp" })
+vim.keymap.set("n", "<leader>sd", MiniExtra.pickers.diagnostic, { desc = "(s)earch (d)iagnostics" })
+
+-- LSP
+require("mason").setup()
+vim.lsp.inlay_hint.enable(true)
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "(g)oto (d)efinition" })
+vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "(g)oto (D)eclaration" })
+vim.keymap.set("n", "grr", function() MiniExtra.pickers.lsp({ scope = "references" }) end,
+  { desc = "(g)oto (r)eferences" })
+vim.keymap.set("n", "gI", vim.lsp.buf.implementation, { desc = "(g)oto (I)mplementation" })
+vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { desc = "(g)oto T(y)pe" })
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "(c)ode (a)ction" })
+vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, { desc = "(c)ode (l)ens" })
+
+-- Treesitter
+require("nvim-treesitter.configs").setup({
+  modules = {},
+  ignore_install = {},
+  ensure_installed = {
+    "typescript",
+    "python",
+    "rust",
+    "go",
+    "zig"
+  },
+  sync_install = false,
+  auto_install = true,
+  highlight = { enable = true, },
+})
