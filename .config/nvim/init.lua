@@ -1,4 +1,8 @@
 vim.opt.relativenumber = true
+if vim.fn.executable('rg') == 1 then
+  vim.opt.grepprg = 'rg --vimgrep --no-heading --smart-case'
+  vim.opt.grepformat = '%f:%l:%c:%m,%f:%l:%m'
+end
 
 -- Set tab and indentation
 vim.opt.tabstop = 2
@@ -225,8 +229,64 @@ local win_config = function()
   }
 end
 
+local function normalize_item(item)
+  if type(item) == "string" then
+    -- Split on %z (null byte) for grep_live picker
+    local tokens = {}
+    for token in item:gmatch("([^%z]+)") do
+      table.insert(tokens, token)
+    end
+
+    if #tokens < 3 then
+      return { filename = item, lnum = 1, col = 1, text = text }
+    end
+
+    return {
+      filename = tokens[1],
+      lnum = tonumber(tokens[2]),
+      col = tonumber(tokens[3]),
+      text = tokens[4] or tokens[1],
+    }
+  elseif type(item) == "table" then
+    return {
+      filename = item.path or item.filename or item.file or "",
+      lnum = tonumber(item.lnum) or tonumber(item.line) or 1,
+      col = tonumber(item.col) or tonumber(item.column) or 1,
+      text = item.text or item.line_text or filename,
+    }
+  end
+end
+
+-- Send MiniPick results to quickfix
+local function send_to_qflist()
+  local items = MiniPick.get_picker_items() or {}
+  if vim.tbl_isempty(items) then
+    return true
+  end
+
+  local qf_items = {}
+  for _, item in ipairs(items) do
+    table.insert(qf_items, normalize_item(item))
+  end
+
+  if vim.tbl_isempty(qf_items) then
+    return true
+  end
+
+  vim.fn.setqflist(qf_items, "r") -- replace quickfix list
+  vim.cmd("copen")                -- open quickfix window
+  return true
+end
+
+
 MiniPick.setup({
   window = { config = win_config },
+  mappings = {
+    send_qf = {
+      char = "<C-q>",
+      func = send_to_qflist
+    }
+  }
 })
 
 -- Override Select with MiniPick
