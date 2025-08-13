@@ -158,7 +158,20 @@ local plugins = {
             border = "rounded"
           }
         },
-        lazygit = {}
+        lazygit = {},
+        dashboard = {
+          preset = {
+            pick = "mini.pick",
+            header =
+            [[
+\    /\
+ )  ( ')
+(  /  )
+ \(__)|
+              ]]
+
+          }
+        }
       }
     }
   }
@@ -197,6 +210,7 @@ require("mini.surround").setup()
 require("mini.jump").setup()
 require("mini.notify").setup()
 require("mini.bracketed").setup()
+require("mini.sessions").setup()
 
 require("mini.statusline").setup()
 require("mini.tabline").setup()
