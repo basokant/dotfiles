@@ -116,6 +116,44 @@ local plugins = {
       },
     },
   },
+
+  {
+    "folke/trouble.nvim",
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = "Trouble",
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        desc = "Diagnostics (Trouble)",
+      },
+      {
+        "<leader>xX",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "Buffer Diagnostics (Trouble)",
+      },
+      {
+        "<leader>cs",
+        "<cmd>Trouble symbols toggle<cr>",
+        desc = "Symbols (Trouble)",
+      },
+      {
+        "<leader>cl",
+        "<cmd>Trouble lsp toggle<cr>",
+        desc = "LSP Definitions / references / ... (Trouble)",
+      },
+      {
+        "<leader>xL",
+        "<cmd>Trouble loclist toggle<cr>",
+        desc = "Location List (Trouble)",
+      },
+      {
+        "<leader>xQ",
+        "<cmd>Trouble qflist toggle<cr>",
+        desc = "Quickfix List (Trouble)",
+      },
+    }
+  }
 }
 
 -- Setup Lazy
@@ -274,7 +312,7 @@ local function send_to_qflist()
   end
 
   vim.fn.setqflist(qf_items, "r") -- replace quickfix list
-  vim.cmd("copen")                -- open quickfix window
+  require("trouble").open('quickfix')
   return true
 end
 
@@ -299,14 +337,38 @@ vim.keymap.set("n", "<leader>fe", MiniExtra.pickers.explorer, { desc = "(f)ind (
 vim.keymap.set("n", "<leader>/", MiniPick.builtin.grep_live, { desc = "Live Grep" })
 vim.keymap.set("n", "<leader>fb", MiniPick.builtin.buffers, { desc = "(f)ind (b)uffer" })
 vim.keymap.set("n", "<leader>sh", MiniPick.builtin.help, { desc = "(s)earch (h)elp" })
-vim.keymap.set("n", "<leader>sd", MiniExtra.pickers.diagnostic, { desc = "(s)earch (d)iagnostics" })
+vim.keymap.set("n", "<leader>sd", function()
+  MiniExtra.pickers.diagnostic({
+    mappings = {
+
+      send_qf = {
+        char = "<C-q>",
+        func = function()
+          require("trouble").open("diagnostics")
+        end
+      }
+    }
+  })
+end, { desc = "(s)earch (d)iagnostics" })
 
 -- LSP
 require("mason").setup()
 vim.lsp.inlay_hint.enable(true)
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "(g)oto (d)efinition" })
 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "(g)oto (D)eclaration" })
-vim.keymap.set("n", "grr", function() MiniExtra.pickers.lsp({ scope = "references" }) end,
+vim.keymap.set("n", "grr", function()
+    MiniExtra.pickers.lsp({
+      scope = "references",
+      mappings = {
+        send_qf = {
+          char = "<C-q>",
+          function()
+            require("trouble").open("lsp")
+          end
+        }
+      }
+    })
+  end,
   { desc = "(g)oto (r)eferences" })
 vim.keymap.set("n", "gI", vim.lsp.buf.implementation, { desc = "(g)oto (I)mplementation" })
 vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { desc = "(g)oto T(y)pe" })
