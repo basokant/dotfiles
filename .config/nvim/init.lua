@@ -142,6 +142,14 @@ local plugins = {
         desc = "Quickfix List (Trouble)",
       },
     }
+  },
+
+  {
+    "kdheepak/lazygit.nvim",
+    lazy = true,
+    keys = {
+      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+    }
   }
 }
 
@@ -168,6 +176,7 @@ require("mini.basics").setup({
   }
 })
 
+require("mini.icons").setup()
 require("mini.ai").setup()
 require("mini.comment").setup()
 require("mini.pairs").setup()
