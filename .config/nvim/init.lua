@@ -24,19 +24,10 @@ local plugins = {
     priority = 1000
   },
 
-  -- MINI plugins
+  -- MINI plugins that cover so much!
   {
     'echasnovski/mini.nvim',
     version = false
-  },
-
-  {
-    'stevearc/oil.nvim',
-    ---@module 'oil'
-    ---@type oil.SetupOpts
-    opts = {},
-    dependencies = { { "echasnovski/mini.icons", opts = {} } },
-    lazy = false,
   },
 
   -- TreeSitter
@@ -110,8 +101,6 @@ local plugins = {
     ft = "lua", -- only load on lua files
     opts = {
       library = {
-        -- See the configuration section for more details
-        -- Load luvit types when the `vim.uv` word is found
         { path = "${3rd}/luv/library", words = { "vim%.uv" } },
       },
     },
@@ -119,7 +108,7 @@ local plugins = {
 
   {
     "folke/trouble.nvim",
-    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    opts = {},
     cmd = "Trouble",
     keys = {
       {
@@ -246,7 +235,14 @@ MiniClue.setup({
   }
 })
 
-vim.keymap.set("n", "<leader>e", require("oil").toggle_float, { desc = "Open parent directory" })
+MiniFiles = require("mini.files")
+MiniFiles.setup()
+
+vim.keymap.set('n', '<leader>e', function()
+  if MiniFiles.close() == nil then
+    MiniFiles.open()
+  end
+end, { desc = 'Toggle MiniFiles' })
 
 vim.keymap.set("n", "<leader>bd", "<CMD>bd<CR>", { desc = "Close current buffer" })
 
@@ -340,7 +336,6 @@ vim.keymap.set("n", "<leader>sh", MiniPick.builtin.help, { desc = "(s)earch (h)e
 vim.keymap.set("n", "<leader>sd", function()
   MiniExtra.pickers.diagnostic({
     mappings = {
-
       send_qf = {
         char = "<C-q>",
         func = function()
@@ -357,19 +352,18 @@ vim.lsp.inlay_hint.enable(true)
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "(g)oto (d)efinition" })
 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "(g)oto (D)eclaration" })
 vim.keymap.set("n", "grr", function()
-    MiniExtra.pickers.lsp({
-      scope = "references",
-      mappings = {
-        send_qf = {
-          char = "<C-q>",
-          function()
-            require("trouble").open("lsp")
-          end
-        }
+  MiniExtra.pickers.lsp({
+    scope = "references",
+    mappings = {
+      send_qf = {
+        char = "<C-q>",
+        function()
+          require("trouble").open("lsp")
+        end
       }
-    })
-  end,
-  { desc = "(g)oto (r)eferences" })
+    }
+  })
+end, { desc = "(g)oto (r)eferences" })
 vim.keymap.set("n", "gI", vim.lsp.buf.implementation, { desc = "(g)oto (I)mplementation" })
 vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { desc = "(g)oto T(y)pe" })
 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "(c)ode (a)ction" })
