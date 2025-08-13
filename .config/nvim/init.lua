@@ -56,6 +56,9 @@ local plugins = {
         "emmet_language_server",
         "pico8_ls",
       },
+      servers = {
+        gleam = {}
+      }
     }
   }, -- links the two above
 
@@ -146,10 +149,17 @@ local plugins = {
   },
 
   {
-    "kdheepak/lazygit.nvim",
-    lazy = true,
-    keys = {
-      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+    {
+      "folke/snacks.nvim",
+      ---@type snacks.Config
+      opts = {
+        styles = {
+          lazygit = {
+            border = "rounded"
+          }
+        },
+        lazygit = {}
+      }
     }
   }
 }
@@ -170,6 +180,8 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup(plugins)
 
 vim.cmd.colorscheme("catppuccin")
+
+Snacks = require("snacks")
 
 require("mini.basics").setup({
   options = {
@@ -377,6 +389,8 @@ vim.keymap.set("n", "gI", vim.lsp.buf.implementation, { desc = "(g)oto (I)mpleme
 vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { desc = "(g)oto T(y)pe" })
 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "(c)ode (a)ction" })
 vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, { desc = "(c)ode (l)ens" })
+
+vim.keymap.set('n', '<leader>gg', Snacks.lazygit.open, { desc = 'Open Lazygit' })
 
 -- Treesitter
 require("nvim-treesitter.configs").setup({
