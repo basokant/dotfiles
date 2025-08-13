@@ -48,11 +48,14 @@ local plugins = {
         "lua_ls",
         "stylua",
         "svelte",
+        "gopls",
+        "denols",
+        "zls",
+        "tsls",
         "astro",
         "emmet_language_server",
         "pico8_ls",
-        "denols",
-      }
+      },
     }
   }, -- links the two above
 
@@ -81,13 +84,11 @@ local plugins = {
     opts_extend = { "sources.default" },
     opts = {
       sources = {
-        -- add lazydev to your completion providers
         default = { "lazydev", "lsp", "path", "snippets", "buffer" },
         providers = {
           lazydev = {
             name = "LazyDev",
             module = "lazydev.integrations.blink",
-            -- make lazydev completions top priority (see `:h blink.cmp`)
             score_offset = 100,
           },
         },
@@ -256,7 +257,6 @@ end, { desc = 'Toggle MiniFiles' })
 vim.keymap.set("n", "<leader>bd", "<CMD>bd<CR>", { desc = "Close current buffer" })
 
 MiniPick = require("mini.pick")
-
 MiniExtra = require("mini.extra")
 
 -- Centered on screen
@@ -387,7 +387,9 @@ require("nvim-treesitter.configs").setup({
     "python",
     "rust",
     "go",
-    "zig"
+    "zig",
+    "gleam",
+    "svelte"
   },
   sync_install = false,
   auto_install = true,
