@@ -6,9 +6,13 @@ end
 
 -- Set tab and indentation
 vim.opt.tabstop = 2
+vim.opt.showtabline = 0
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
+
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 -- Use system clipboard
 vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
@@ -55,7 +59,7 @@ local plugins = {
         "gopls",
         "denols",
         "zls",
-        "tsls",
+        "ts_ls",
         "astro",
         "emmet_language_server",
         "pico8_ls",
