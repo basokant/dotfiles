@@ -52,61 +52,51 @@ local plugins = {
   {
     'mason-org/mason-lspconfig.nvim',
     opts = {
-        ensure_installed = {
-          "lua_ls",
-          "stylua",
-          "svelte",
-          "gopls",
-          "denols",
-          "zls",
-          "vtsls",
-          "astro",
-          "emmet_language_server",
-          "pico8_ls",
-        },
-        servers = {
-          gleam = {},
-          vtsls = {
-            settings = {
-              complete_function_calls = true,
-              vtsls = {
-                enableMoveToFileCodeAction = true,
-                autoUseWorkspaceTsdk = true,
-                experimental = {
-                  maxInlayHintLength = 30,
-                  completion = {
-                    enableServerSideFuzzyMatch = true,
-                  },
-                },
-              },
-              typescript = {
-                updateImportsOnFileMove = { enabled = "always" },
-                suggest = {
-                  completeFunctionCalls = true,
-                },
-                inlayHints = {
-                  enumMemberValues = { enabled = true },
-                  functionLikeReturnTypes = { enabled = true },
-                  parameterNames = { enabled = "literals" },
-                  parameterTypes = { enabled = true },
-                  propertyDeclarationTypes = { enabled = true },
-                  variableTypes = { enabled = false },
+      ensure_installed = {
+        "lua_ls",
+        "stylua",
+        "svelte",
+        "gopls",
+        "denols",
+        "zls",
+        "vtsls",
+        "astro",
+        "emmet_language_server",
+        "pico8_ls",
+      },
+      servers = {
+        gleam = {},
+        vtsls = {
+          settings = {
+            complete_function_calls = true,
+            vtsls = {
+              enableMoveToFileCodeAction = true,
+              autoUseWorkspaceTsdk = true,
+              experimental = {
+                maxInlayHintLength = 30,
+                completion = {
+                  enableServerSideFuzzyMatch = true,
                 },
               },
             },
+            typescript = {
+              updateImportsOnFileMove = { enabled = "always" },
+              suggest = {
+                completeFunctionCalls = true,
+              },
+              inlayHints = {
+                enumMemberValues = { enabled = true },
+                functionLikeReturnTypes = { enabled = true },
+                parameterNames = { enabled = "literals" },
+                parameterTypes = { enabled = true },
+                propertyDeclarationTypes = { enabled = true },
+                variableTypes = { enabled = false },
+              },
+            },
           },
-        }
-      },
-    config = function(_, opts)
-      local has_blink, blink = pcall(require, "blink.cmp")
-      local capabilities = vim.tbl_deep_extend(
-        "force",
-        {},
-        vim.lsp.protocol.make_client_capabilities(),
-        has_blink and blink.get_lsp_capabilities() or {},
-        opts.capabilities or {}
-      )
-    end
+        },
+      }
+    },
   }, -- links the two above
 
   -- Some LSPs don't support formatting, this fills the gaps
@@ -475,15 +465,15 @@ end, { desc = "(s)earch (d)iagnostics" })
 require("mason").setup()
 
 local nvim_lsp = require('lspconfig')
-nvim_lsp.denols.setup {
+nvim_lsp.denols.setup({
   on_attach = on_attach,
   root_dir = nvim_lsp.util.root_pattern("deno.json", "deno.jsonc"),
-}
-nvim_lsp.ts_ls.setup {
+})
+nvim_lsp.vtsls.setup({
   on_attach = on_attach,
   root_dir = nvim_lsp.util.root_pattern("package.json"),
   single_file_support = false
-}
+})
 
 vim.lsp.inlay_hint.enable(true)
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "(g)oto (d)efinition" })
