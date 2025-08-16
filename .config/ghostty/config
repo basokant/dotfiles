@@ -101,3 +101,5 @@ keybind = alt+]=next_tab
 # Prompt navigation
 keybind = alt+b=jump_to_prompt:-1
 keybind = alt+f=jump_to_prompt:1
+
+custom-shader = shaders/smear-cursor.glsl
