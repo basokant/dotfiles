@@ -261,7 +261,7 @@ require("mini.sessions").setup({
 -- Auto-save on exit
 vim.api.nvim_create_autocmd("VimLeavePre", {
 	callback = function()
-		local session_name = vim.fn.getcwd():gsub("/", "%%") -- encode path into safe name
+		local session_name = vim.fn.getcwd()
 		MiniSessions.write(session_name, { force = true })
 	end,
 })
