@@ -5,6 +5,7 @@ if vim.fn.executable("rg") == 1 then
 end
 
 -- Set tab and indentation
+vim.opt.list = false
 vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
 vim.opt.expandtab = true
@@ -157,6 +158,7 @@ local plugins = {
 			{ "<leader>vs", "<cmd>LoveStop<cr>", ft = "lua", desc = "Stop LÖVE" },
 		},
 	},
+
 	{
 		"folke/trouble.nvim",
 		opts = {},
@@ -195,33 +197,7 @@ local plugins = {
 		},
 	},
 
-	{
-		{
-			"folke/snacks.nvim",
-			---@type snacks.Config
-			opts = {
-				styles = {
-					lazygit = {
-						border = "rounded",
-					},
-				},
-				lazygit = {},
-				indent = {},
-				scope = {},
-				dashboard = {
-					preset = {
-						pick = "mini.pick",
-						header = [[
-\    /\
- )  ( ')
-(  /  )
- \(__)|
-              ]],
-					},
-				},
-			},
-		},
-	},
+	-- Pretty Markdown Support
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		opts = {
@@ -237,20 +213,16 @@ local plugins = {
 		ft = { "markdown", "norg", "rmd", "org", "codecompanion" },
 		config = function(_, opts)
 			require("render-markdown").setup(opts)
-			Snacks.toggle({
-				name = "Render Markdown",
-				get = function()
-					return require("render-markdown.state").enabled
-				end,
-				set = function(enabled)
-					local m = require("render-markdown")
-					if enabled then
-						m.enable()
-					else
-						m.disable()
-					end
-				end,
-			}):map("<leader>um")
+			vim.keymap.set("n", "<leader>um", function()
+				local state = require("render-markdown.state")
+				local m = require("render-markdown")
+
+				if state.enabled then
+					m.disable()
+				else
+					m.enable()
+				end
+			end, { desc = "Toggle Render Markdown" })
 		end,
 	},
 	{
@@ -289,8 +261,6 @@ require("lazy").setup(plugins)
 
 vim.cmd.colorscheme("catppuccin")
 
-Snacks = require("snacks")
-
 require("mini.basics").setup({
 	options = {
 		extra_ui = true,
@@ -318,7 +288,11 @@ require("mini.comment").setup()
 require("mini.pairs").setup()
 require("mini.surround").setup()
 require("mini.jump").setup()
-require("mini.notify").setup()
+require("mini.notify").setup({
+	lsp_progress = {
+		enable = false,
+	},
+})
 require("mini.bracketed").setup()
 
 require("mini.statusline").setup()
@@ -467,23 +441,91 @@ MiniPick.setup({
 vim.ui.select = MiniPick.ui_select
 
 -- Pickers
+
+--- Pick from Config Files
+---
+--- Lists all config files recursively in all subdirectories. Tries to use one of the
+--- CLI tools to create items (see |MiniPick-cli-tools|): `rg`, `fd`, `git`.
+--- If none is present, uses fallback which utilizes |vim.fs.dir()|.
+---
+--- To customize CLI tool search, either use tool's global configuration approach
+--- or directly |MiniPick.builtin.cli()| with specific command.
+---
+---@param local_opts __pick_builtin_local_opts
+---   Possible fields:
+---   - <tool> `(string)` - which tool to use. One of "rg", "fd", "git", "fallback".
+---     Default: whichever tool is present, trying in that same order.
+---@param opts __pick_builtin_opts
+MiniPick.registry.config = function(local_opts, opts)
+	MiniPick.builtin.files(local_opts or {}, vim.tbl_extend("force", opts or {}, { source = { cwd = "~/dotfiles" } }))
+end
+
+--- Built-in diagnostic picker
+---
+--- Pick from |vim.diagnostic| using |vim.diagnostic.get()|.
+---
+---@param local_opts __extra_pickers_local_opts
+---   Possible fields:
+---   - <get_opts> `(table)` - options for |vim.diagnostic.get()|. Can be used
+---     to limit severity or namespace. Default: `{}`.
+---   - <scope> `(string)` - one of "all" (available) or "current" (buffer).
+---     Default: "all".
+---   - <sort_by> `(string)` - sort priority. One of "severity", "path", "none".
+---     Default: "severity".
+---@param opts __extra_pickers_opts
+---
+---@return __extra_pickers_return
+MiniPick.builtin.diagnostic = function(local_opts, opts)
+	MiniExtra.pickers.diagnostic(
+		vim.tbl_extend("force", local_opts or {}, {
+			mappings = {
+				send_qf = {
+					char = "<C-q>",
+					func = function()
+						require("trouble").open("diagnostics")
+					end,
+				},
+			},
+		}),
+		opts or {}
+	)
+end
+
 vim.keymap.set("n", "<leader>ff", MiniPick.builtin.files, { desc = "(f)ind (f)ile" })
 vim.keymap.set("n", "<leader>fe", MiniExtra.pickers.explorer, { desc = "(f)ind (e)xplorer" })
+vim.keymap.set("n", "<leader>fc", MiniPick.registry.config, { desc = "(f)ind (c)onfig file" })
 vim.keymap.set("n", "<leader>/", MiniPick.builtin.grep_live, { desc = "Live Grep" })
 vim.keymap.set("n", "<leader>fb", MiniPick.builtin.buffers, { desc = "(f)ind (b)uffer" })
 vim.keymap.set("n", "<leader>sh", MiniPick.builtin.help, { desc = "(s)earch (h)elp" })
-vim.keymap.set("n", "<leader>sd", function()
-	MiniExtra.pickers.diagnostic({
-		mappings = {
-			send_qf = {
-				char = "<C-q>",
-				func = function()
-					require("trouble").open("diagnostics")
-				end,
-			},
-		},
-	})
-end, { desc = "(s)earch (d)iagnostics" })
+vim.keymap.set("n", "<leader>sd", MiniPick.builtin.diagnostic, { desc = "(s)earch (d)iagnostics" })
+
+-- Dashboard
+MiniStarter = require("mini.starter")
+
+MiniStarter.setup({
+	header = [[
+ /\_/\  
+( o.o ) 
+ > ^ <  
+  ]],
+	evaluate_single = true,
+	items = {
+		{ name = "Find File  ", action = MiniPick.builtin.files, section = "" },
+		{ name = "Grep Live  ", action = MiniPick.builtin.grep_live, section = "" },
+		{ name = "New File  ", action = "ene | startinsert", section = "" },
+		{ name = "Recent Files  ", action = MiniExtra.pickers.oldfiles, section = "" },
+		{ name = "Config  ", action = MiniPick.registry.config, section = "" },
+		{ name = "Help 󰋖", action = MiniPick.builtin.help, section = "" },
+		{ name = "Session Restore ", action = MiniSessions.read, section = "" },
+		{ name = "Lazy 󰒲 ", action = "Lazy", section = "" },
+		{ name = "Quit  ", action = "qa", section = "" },
+	},
+	footer = "",
+	content_hooks = {
+		MiniStarter.gen_hook.adding_bullet(),
+		MiniStarter.gen_hook.aligning("center", "center"),
+	},
+})
 
 -- LSP
 require("mason").setup()
@@ -517,8 +559,6 @@ vim.keymap.set("n", "gI", vim.lsp.buf.implementation, { desc = "(g)oto (I)mpleme
 vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { desc = "(g)oto T(y)pe" })
 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "(c)ode (a)ction" })
 vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, { desc = "(c)ode (l)ens" })
-
-vim.keymap.set("n", "<leader>gg", Snacks.lazygit.open, { desc = "Open Lazygit" })
 
 -- Treesitter
 require("nvim-treesitter.configs").setup({
