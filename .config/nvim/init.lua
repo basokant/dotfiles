@@ -273,6 +273,7 @@ local plugins = {
 
 -- Setup Lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+---@diagnostic disable-next-line: undefined-field
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
@@ -296,6 +297,21 @@ require("mini.basics").setup({
 	},
 })
 
+require("mini.sessions").setup({
+	-- directory where sessions are stored
+	directory = vim.fn.stdpath("data") .. "/sessions",
+	autoread = false, -- we’ll handle loading manually
+	autowrite = false, -- disable default auto-write
+})
+
+-- Auto-save on exit
+vim.api.nvim_create_autocmd("VimLeavePre", {
+	callback = function()
+		local session_name = vim.fn.getcwd():gsub("/", "%%") -- encode path into safe name
+		MiniSessions.write(session_name, { force = true })
+	end,
+})
+
 require("mini.icons").setup()
 require("mini.ai").setup()
 require("mini.comment").setup()
@@ -304,7 +320,6 @@ require("mini.surround").setup()
 require("mini.jump").setup()
 require("mini.notify").setup()
 require("mini.bracketed").setup()
-require("mini.sessions").setup()
 
 require("mini.statusline").setup()
 require("mini.tabline").setup()
