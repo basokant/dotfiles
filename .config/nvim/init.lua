@@ -141,11 +141,22 @@ local plugins = {
 		opts = {
 			library = {
 				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
-				{ path = "${3rd}/love2d/library", words = { "love" } },
 			},
 		},
 	},
 
+	-- Configure LuaLS for Love2D
+	{
+		"S1M0N38/love2d.nvim",
+		event = "VeryLazy",
+		version = "2.*",
+		opts = {},
+		keys = {
+			{ "<leader>v", ft = "lua", desc = "LÖVE" },
+			{ "<leader>vv", "<cmd>LoveRun<cr>", ft = "lua", desc = "Run LÖVE" },
+			{ "<leader>vs", "<cmd>LoveStop<cr>", ft = "lua", desc = "Stop LÖVE" },
+		},
+	},
 	{
 		"folke/trouble.nvim",
 		opts = {},
@@ -464,11 +475,9 @@ require("mason").setup()
 
 local nvim_lsp = require("lspconfig")
 nvim_lsp.denols.setup({
-	on_attach = on_attach,
 	root_dir = nvim_lsp.util.root_pattern("deno.json", "deno.jsonc"),
 })
 nvim_lsp.vtsls.setup({
-	on_attach = on_attach,
 	root_dir = nvim_lsp.util.root_pattern("package.json"),
 	single_file_support = false,
 })
