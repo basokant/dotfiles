@@ -349,19 +349,6 @@ vim.keymap.set("n", "<leader>bd", "<CMD>bd<CR>", { desc = "Close current buffer"
 MiniPick = require("mini.pick")
 MiniExtra = require("mini.extra")
 
--- Centered on screen
-local win_config = function()
-	local height = math.floor(0.618 * vim.o.lines)
-	local width = math.floor(0.618 * vim.o.columns)
-	return {
-		anchor = "NW",
-		height = height,
-		width = width,
-		row = math.floor(0.5 * (vim.o.lines - height)),
-		col = math.floor(0.5 * (vim.o.columns - width)),
-	}
-end
-
 local function normalize_item(item)
 	if type(item) == "string" then
 		-- Split on %z (null byte) for grep_live picker
@@ -412,7 +399,6 @@ local function send_to_qflist()
 end
 
 MiniPick.setup({
-	window = { config = win_config },
 	mappings = {
 		send_qf = {
 			char = "<C-q>",
