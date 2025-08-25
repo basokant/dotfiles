@@ -15,9 +15,6 @@ set -gx PATH $GOPATH/bin $PATH
 # Prompt
 starship init fish | source
 
-# Zoxide, a better cd
-zoxide init fish | source
-
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 if test -f /Users/basokant/miniconda3/bin/conda
