@@ -1,7 +1,7 @@
-function sp -d 'Search for a Project to open. Projects are within ~/Documents/workspace.'
+function sp -d 'Search for a Project to open. Projects are within ~/workspace.'
     set -l cwd (pwd)
 
-    set -l workspace_directory ~/Documents/workspace
+    set -l workspace_directory ~/workspace
     cd $workspace_directory
 
     set -l chosen_project (

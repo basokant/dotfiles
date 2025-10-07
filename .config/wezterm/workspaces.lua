@@ -3,7 +3,7 @@ local mux = wezterm.mux
 
 local function setup_default()
 	local name = "default"
-	local dir = wezterm.home_dir .. "/Documents/workspace"
+	local dir = wezterm.home_dir .. "/workspace"
 
 	local editor_tab, editor_pane, window = mux.spawn_window({
 		workspace = name,
