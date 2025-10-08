@@ -25,7 +25,8 @@ vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to Declaration" 
 
 -- Diagnostic
 vim.diagnostic.config({ virtual_text = true, signs = { text = { " ", " ", " ", " " } } })
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic location list" })
+vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, { desc = "Open diagnostic location list" })
+vim.cmd("packadd cfilter") -- filtering quickfix and location list
 
 local plugins = { -- Plugins via Lazy Package Manager
 	{
@@ -98,11 +99,12 @@ local plugins = { -- Plugins via Lazy Package Manager
 			end
 		end,
 		keys = {
-			{ "<leader>ff", "<cmd>Pick files<cr>", desc = "Find File" },
 			{ "<leader>e", "<cmd>Pick explorer<cr>", desc = "File Explorer" },
-			{ "<leader>fc", "<cmd>Pick config<cr>", desc = "Find Config file" },
+			{ "<leader>sf", "<cmd>Pick files<cr>", desc = "Search Files" },
+			{ "<leader>sr", "<cmd>Pick oldfiles<cr>", desc = "Search Recent Files" },
+			{ "<leader>sc", "<cmd>Pick config<cr>", desc = "Search Config" },
 			{ "<leader>/", "<cmd>Pick grep_live<cr>", desc = "Live Grep" },
-			{ "<leader>fb", "<cmd>Pick buffers<cr>", desc = "Find Buffers" },
+			{ "<leader>sb", "<cmd>Pick buffers<cr>", desc = "Search Buffers" },
 			{ "<leader>sh", "<cmd>Pick help<cr>", desc = "Search Help" },
 			{ "<leader>sd", "<cmd>Pick diagnostics<cr>", desc = "Search Diagnostics" },
 			{ "<leader>z=", "<cmd>Pick spellsuggest<cr>", desc = "Show spelling suggestions" },
