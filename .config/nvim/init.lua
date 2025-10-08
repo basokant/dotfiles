@@ -133,6 +133,7 @@ local plugins = { -- Plugins via Lazy Package Manager
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		config = function()
+			---@diagnostic disable-next-line: missing-fields
 			require("nvim-treesitter.configs").setup({ auto_install = true, highlight = { enable = true } })
 		end,
 	},
@@ -175,6 +176,15 @@ local plugins = { -- Plugins via Lazy Package Manager
 		end,
 	},
 	{
+		"folke/lazydev.nvim",
+		ft = "lua",
+		opts = {
+			library = {
+				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+			},
+		},
+	},
+	{
 		"stevearc/conform.nvim", -- Formatting
 		opts = {
 			formatters_by_ft = { lua = { "stylua" } },
@@ -183,12 +193,22 @@ local plugins = { -- Plugins via Lazy Package Manager
 	},
 	{
 		"saghen/blink.cmp", -- Completion engine
-		version = "1.*",
-		opts = {},
+		dependencies = { "rafamadriz/friendly-snippets", "folke/lazydev.nvim" },
+		build = "cargo build --release",
+		opts = {
+			sources = {
+				default = { "lsp", "path", "snippets", "lazydev" },
+				providers = {
+					lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
+				},
+			},
+			signature = { enabled = true },
+		},
 	},
 }
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+---@diagnostic disable-next-line: undefined-field
 if not vim.loop.fs_stat(lazypath) then -- Setup Lazy
 	vim.fn.system({
 		"git",
