@@ -44,6 +44,17 @@ local plugins = { -- Plugins via Lazy Package Manager
 	{ "nvim-mini/mini.pairs", opts = {} },
 	{ "nvim-mini/mini.surround", opts = {} },
 	{ "nvim-mini/mini.bracketed", opts = {} },
+	{
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {},
+		lazy = false,
+		keys = {
+			{ "]t", "<cmd>lua require('todo-comments').jump_next()<cr>", desc = "Todo forward" },
+			{ "[t", "<cmd>lua require('todo-comments').jump_prev()<cr>", desc = "Todo backward" },
+			{ "<leader>t", "<cmd>TodoLocList<cr>", desc = "Open todo location list" },
+		},
+	},
 	{ "nvim-mini/mini.statusline", opts = {} },
 	{ "nvim-mini/mini.tabline", opts = {} },
 	{
