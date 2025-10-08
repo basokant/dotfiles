@@ -68,7 +68,6 @@ local plugins = {
 											.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
 										languages = { "vue" },
 										configNamespace = "typescript",
-										enableForWorkspaceTypeScriptVersions = true,
 									},
 								},
 							},
