@@ -45,7 +45,12 @@ local plugins = { -- Plugins via Lazy Package Manager
 	{ "nvim-mini/mini.bracketed", opts = {} },
 	{ "nvim-mini/mini.statusline", opts = {} },
 	{ "nvim-mini/mini.tabline", opts = {} },
-	{ "nvim-mini/mini.diff", opts = { view = { style = "number" } } },
+	{
+		"nvim-mini/mini.diff",
+		opts = { view = { style = "number" } },
+		lazy = false,
+		keys = { { "<leader>ghp", "<cmd>lua MiniDiff.toggle_overlay()<cr>", desc = "Preview Hunk" } },
+	},
 	{
 		"nvim-mini/mini.clue",
 		config = function(_, _)
