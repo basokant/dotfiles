@@ -24,7 +24,7 @@ vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to Declaration" })
 
 -- Diagnostic
-vim.diagnostic.config({ signs = { text = { " ", " ", " ", " " } } })
+vim.diagnostic.config({ virtual_text = true, signs = { text = { " ", " ", " ", " " } } })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic location list" })
 
 local plugins = { -- Plugins via Lazy Package Manager
@@ -182,7 +182,7 @@ local plugins = { -- Plugins via Lazy Package Manager
 	{
 		"saghen/blink.cmp", -- Completion engine
 		version = "1.*",
-		opts = { sources = { default = { "lsp", "path", "snippets" } } },
+		opts = {},
 	},
 }
 
