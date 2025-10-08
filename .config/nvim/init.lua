@@ -12,6 +12,7 @@ vim.opt.tabstop = 2
 
 vim.opt.clipboard:append({ "unnamed", "unnamedplus" }) -- system clipboard
 
+vim.g.mapleader = " "
 vim.keymap.set({ "n", "v" }, "<C-d>", "<C-d>zz") -- recenter down motion
 vim.keymap.set({ "n", "v" }, "<C-u>", "<C-u>zz") -- recenter up motion
 vim.keymap.set("n", "<leader>bd", "<cmd>bd<cr>", { desc = "Close buffer" })
@@ -98,15 +99,6 @@ local plugins = {
 		version = "1.*",
 		opts = { sources = { default = { "lsp", "path", "snippets" } } },
 	},
-	{
-		"folke/trouble.nvim",
-		cmd = "Trouble",
-		keys = {
-			{ "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)" },
-			{ "<leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
-			{ "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List (Trouble)" },
-		},
-	},
 }
 
 -- Setup Lazy
@@ -125,13 +117,12 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup(plugins)
 
 -- Mini Plugins
-require("mini.basics").setup({})
+require("mini.basics").setup()
 require("mini.icons").setup()
 require("mini.ai").setup()
 require("mini.comment").setup()
 require("mini.pairs").setup()
 require("mini.surround").setup()
-require("mini.jump").setup()
 require("mini.notify").setup({})
 require("mini.bracketed").setup()
 require("mini.statusline").setup()
@@ -154,7 +145,6 @@ MiniClue = require("mini.clue") -- keybind hints
 MiniClue.setup({
 	triggers = {
 		{ mode = "n", keys = "<Leader>" },
-		{ mode = "i", keys = "<C-x>" },
 		{ mode = "n", keys = "g" },
 		{ mode = "n", keys = "'" },
 		{ mode = "n", keys = "`" },
@@ -186,7 +176,7 @@ MiniPick = require("mini.pick") -- Fuzzy Finder / Picker
 MiniExtra = require("mini.extra")
 MiniPick.setup({
 	mappings = {
-		choose_all = {
+		send_qf = {
 			char = "<C-q>",
 			func = function()
 				local mappings = MiniPick.get_picker_opts().mappings
@@ -208,7 +198,7 @@ vim.keymap.set("n", "<leader>/", MiniPick.builtin.grep_live, { desc = "Live Grep
 vim.keymap.set("n", "<leader>fb", MiniPick.builtin.buffers, { desc = "(f)ind (b)uffer" })
 vim.keymap.set("n", "<leader>sh", MiniPick.builtin.help, { desc = "(s)earch (h)elp" })
 vim.keymap.set("n", "<leader>sd", MiniExtra.pickers.diagnostic, { desc = "(s)earch (d)iagnostics" })
-vim.keymap.set("n", "z=", MiniExtra.pickers.spellsuggest, { desc = "Show spelling suggestions" })
+vim.keymap.set("n", "z=", MiniExtra.pickers.spellsuggest, { desc = "show spelling suggestions" })
 vim.keymap.set("n", "<leader>sk", MiniExtra.pickers.keymaps, { desc = "(s)earch (k)eymaps" })
 vim.keymap.set("n", "<leader>sc", MiniExtra.pickers.commands, { desc = "(s)earch (c)ommands" })
 vim.keymap.set("n", "<leader>so", MiniExtra.pickers.options, { desc = "(s)earch (o)ptions" })
@@ -237,10 +227,18 @@ require("nvim-treesitter.configs").setup({ auto_install = true, highlight = { en
 -- LSP keybindings
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "(g)oto (d)efinition" })
 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "(g)oto (D)eclaration" })
-vim.keymap.set("n", "grr", function()
-	MiniExtra.pickers.lsp({ scope = "references" })
-end, { desc = "(g)oto (r)eferences" })
+vim.keymap.set("n", "grr", vim.lsp.buf.references, { desc = "(g)oto (r)eferences" })
 vim.keymap.set("n", "gI", vim.lsp.buf.implementation, { desc = "(g)oto (I)mplementation" })
 vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { desc = "(g)oto T(y)pe" })
 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "(c)ode (a)ction" })
 vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, { desc = "(c)ode (l)ens" })
+
+-- Diagnostic / Quickfix List
+vim.keymap.set("n", "<leader>q", "<cmd>copen<cr>", { desc = "(q)uickfix list" })
+vim.keymap.set("n", "<leader>l", "<cmd>lopen<cr>", { desc = "(l)ocation list" })
+vim.keymap.set("n", "<leader>dq", function()
+	vim.diagnostic.setqflist({ open = true })
+end, { desc = "(d)iagnostic (q)uickfix list" })
+vim.keymap.set("n", "<leader>dl", function()
+	vim.diagnostic.setlocationlist({ bufnr = 0, open = true })
+end, { desc = "(d)iagnostic (l)ocation list" })
