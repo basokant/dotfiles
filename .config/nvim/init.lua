@@ -52,35 +52,30 @@ local plugins = {
 				"vue_ls",
 				"svelte",
 			},
-			servers = {
-				vtsls = {
-					root_dir = function(bufnr, ondir)
-						if vim.fs.root(bufnr, { "package.json" }) ~= nil then
-							ondir(vim.fs.root(bufnr, { "package.json" }))
-						end
-					end,
-					settings = {
-						vtsls = {
-							tsserver = {
-								globalPlugins = {
-									{
-										name = "@vue/typescript-plugin",
-										location = vim.fn.stdpath("data")
-											.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
-										languages = { "vue" },
-										configNamespace = "typescript",
-									},
+		},
+		config = function(_, opts)
+			vim.lsp.config("vtsls", { -- VSCode TypeScript LSP
+				root_dir = function(bufnr, ondir)
+					if vim.fs.root(bufnr, { "package.json" }) ~= nil then
+						ondir(vim.fs.root(bufnr, { "package.json" }))
+					end
+				end,
+				settings = {
+					vtsls = {
+						tsserver = {
+							globalPlugins = {
+								{
+									name = "@vue/typescript-plugin",
+									location = vim.fn.stdpath("data")
+										.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+									languages = { "vue" },
+									configNamespace = "typescript",
 								},
 							},
 						},
 					},
 				},
-			},
-		},
-		config = function(_, opts)
-			for server, config in pairs(opts.servers) do
-				vim.lsp.config(server, config)
-			end
+			})
 			vim.lsp.enable(opts.ensure_installed)
 		end,
 	},
@@ -233,7 +228,14 @@ vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, { desc = "(g)oto T(y)pe" 
 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "(c)ode (a)ction" })
 vim.keymap.set("n", "<leader>cl", vim.lsp.codelens.run, { desc = "(c)ode (l)ens" })
 
--- Diagnostic / Quickfix List
+-- Diagnostic
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+	local hl = "DiagnosticSign" .. type
+	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+end
+
+-- Quickfix List keybindings
 vim.keymap.set("n", "<leader>q", "<cmd>copen<cr>", { desc = "(q)uickfix list" })
 vim.keymap.set("n", "<leader>l", "<cmd>lopen<cr>", { desc = "(l)ocation list" })
 vim.keymap.set("n", "<leader>dq", function()
