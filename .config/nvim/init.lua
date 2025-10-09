@@ -87,14 +87,19 @@ local plugins = { -- Plugins via Lazy Package Manager
 	{
 		"nvim-mini/mini.pick",
 		dependencies = { "nvim-mini/mini.extra", opts = {} },
-		opts = {},
 		config = function(_, _)
 			require("mini.pick").setup()
 			vim.ui.select = MiniPick.ui_select
 			MiniPick.registry.config = function(local_opts, opts)
 				MiniPick.builtin.files(
 					local_opts or {},
-					vim.tbl_extend("force", opts or {}, { source = { cwd = "~/dotfiles" } })
+					vim.tbl_extend("force", opts or {}, { source = { name = "config", cwd = "~/dotfiles" } })
+				)
+			end
+			MiniPick.registry.todos = function(local_opts, opts)
+				MiniPick.builtin.grep(
+					vim.tbl_extend("force", local_opts or {}, { pattern = "TODO|FIXME|NOTE|BUG|HACK" }),
+					opts or {}
 				)
 			end
 		end,
@@ -103,10 +108,10 @@ local plugins = { -- Plugins via Lazy Package Manager
 			{ "<leader>sf", "<cmd>Pick files<cr>", desc = "Search Files" },
 			{ "<leader>sr", "<cmd>Pick oldfiles<cr>", desc = "Search Recent Files" },
 			{ "<leader>sc", "<cmd>Pick config<cr>", desc = "Search Config" },
+			{ "<leader>st", "<cmd>Pick todos<cr>", desc = "Search Todo Comments" },
 			{ "<leader>/", "<cmd>Pick grep_live<cr>", desc = "Live Grep" },
 			{ "<leader>sb", "<cmd>Pick buffers<cr>", desc = "Search Buffers" },
 			{ "<leader>sh", "<cmd>Pick help<cr>", desc = "Search Help" },
-			{ "<leader>sd", "<cmd>Pick diagnostics<cr>", desc = "Search Diagnostics" },
 			{ "<leader>z=", "<cmd>Pick spellsuggest<cr>", desc = "Show spelling suggestions" },
 		},
 	},
