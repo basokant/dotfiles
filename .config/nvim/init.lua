@@ -19,11 +19,9 @@ vim.keymap.set({ "n", "v" }, "<C-d>", "<C-d>zz") -- recenter down motion
 vim.keymap.set({ "n", "v" }, "<C-u>", "<C-u>zz") -- recenter up motion
 vim.keymap.set("n", "<leader>bd", "<cmd>bd<cr>", { desc = "Close buffer" })
 
--- LSP keybindings (rest are default)
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to Declaration" })
 
--- Diagnostic
 vim.diagnostic.config({ virtual_text = true, signs = { text = { " ", " ", " ", " " } } })
 vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, { desc = "Open diagnostic location list" })
 vim.cmd("packadd cfilter") -- filtering quickfix and location list
@@ -44,23 +42,12 @@ local plugins = { -- Plugins via Lazy Package Manager
 	{ "nvim-mini/mini.pairs", opts = {} },
 	{ "nvim-mini/mini.surround", opts = {} },
 	{ "nvim-mini/mini.bracketed", opts = {} },
-	{
-		"folke/todo-comments.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		opts = {},
-		lazy = false,
-		keys = {
-			{ "]t", "<cmd>lua require('todo-comments').jump_next()<cr>", desc = "Todo forward" },
-			{ "[t", "<cmd>lua require('todo-comments').jump_prev()<cr>", desc = "Todo backward" },
-			{ "<leader>t", "<cmd>TodoLocList<cr>", desc = "Open todo location list" },
-		},
-	},
 	{ "nvim-mini/mini.statusline", opts = {} },
 	{ "nvim-mini/mini.tabline", opts = {} },
 	{
 		"nvim-mini/mini.diff",
-		opts = { view = { style = "number" } },
 		lazy = false,
+		opts = { view = { style = "number" } },
 		keys = { { "<leader>ghp", "<cmd>lua MiniDiff.toggle_overlay()<cr>", desc = "Preview Hunk" } },
 	},
 	{
@@ -143,8 +130,7 @@ local plugins = { -- Plugins via Lazy Package Manager
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
-		config = function()
-			---@diagnostic disable-next-line: missing-fields
+		config = function() ---@diagnostic disable-next-line: missing-fields
 			require("nvim-treesitter.configs").setup({ auto_install = true, highlight = { enable = true } })
 		end,
 	},
@@ -218,8 +204,7 @@ local plugins = { -- Plugins via Lazy Package Manager
 	},
 }
 
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
----@diagnostic disable-next-line: undefined-field
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim" ---@diagnostic disable-next-line: undefined-field
 if not vim.loop.fs_stat(lazypath) then -- Setup Lazy
 	vim.fn.system({
 		"git",
