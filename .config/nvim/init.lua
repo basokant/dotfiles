@@ -173,7 +173,7 @@ local plugins = { -- Plugins via Lazy Package Manager
 		end,
 	},
 	{
-		"folke/lazydev.nvim",
+		"folke/lazydev.nvim", -- Setup Lua LSP for config
 		ft = "lua",
 		opts = {
 			library = {
