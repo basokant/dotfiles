@@ -25,9 +25,10 @@ vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to Declaration" 
 vim.diagnostic.config({ virtual_text = true, signs = { text = { " ", " ", " ", " " } } })
 vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, { desc = "Open diagnostic location list" })
 vim.cmd("packadd cfilter") -- filtering quickfix and location list
-vim.keymap.set("n", "<leader>q", "<cmd>cw<cr>", { desc = "Toggle quickfix list" })
-vim.keymap.set("n", "<leader>l", "<cmd>lw<cr>", { desc = "Toggle location list" })
+vim.keymap.set("n", "<leader>q", "<cmd>cw<cr>", { desc = "Open quickfix list" })
+vim.keymap.set("n", "<leader>l", "<cmd>lw<cr>", { desc = "Open location list" })
 
+---@type LazySpec[]
 local plugins = { -- Plugins via Lazy Package Manager
 	{
 		"catppuccin/nvim",
@@ -53,9 +54,9 @@ local plugins = { -- Plugins via Lazy Package Manager
 	},
 	{
 		"nvim-mini/mini.clue",
-		config = function(_, _)
+		opts = function(_, opts)
 			local gen_clues = require("mini.clue").gen_clues
-			require("mini.clue").setup({
+			vim.tbl_deep_extend("force", opts, {
 				triggers = {
 					{ mode = "n", keys = "<Leader>" },
 					{ mode = "n", keys = "g" },
@@ -131,7 +132,7 @@ local plugins = { -- Plugins via Lazy Package Manager
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
-		config = function() ---@diagnostic disable-next-line: missing-fields
+		init = function() ---@diagnostic disable-next-line: missing-fields
 			require("nvim-treesitter.configs").setup({ auto_install = true, highlight = { enable = true } })
 		end,
 	},
@@ -147,7 +148,6 @@ local plugins = { -- Plugins via Lazy Package Manager
 				"emmet_language_server",
 				"gopls",
 				"zls",
-				"pico8_ls",
 				"tinymist",
 				"marksman",
 				"vue_ls",
@@ -155,6 +155,7 @@ local plugins = { -- Plugins via Lazy Package Manager
 			},
 		},
 		config = function(_, opts)
+			require("mason-lspconfig").setup(opts)
 			local vue_plugin = {
 				name = "@vue/typescript-plugin",
 				location = vim.fn.stdpath("data")
@@ -176,11 +177,7 @@ local plugins = { -- Plugins via Lazy Package Manager
 	{
 		"folke/lazydev.nvim", -- Setup Lua LSP for config
 		ft = "lua",
-		opts = {
-			library = {
-				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
-			},
-		},
+		opts = { library = { { path = "${3rd}/luv/library", words = { "vim%.uv" } } } },
 	},
 	{
 		"stevearc/conform.nvim", -- Formatting
@@ -196,9 +193,7 @@ local plugins = { -- Plugins via Lazy Package Manager
 		opts = {
 			sources = {
 				default = { "lsp", "path", "snippets", "lazydev" },
-				providers = {
-					lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
-				},
+				providers = { lazydev = { module = "lazydev.integrations.blink", score_offset = 100 } },
 			},
 			signature = { enabled = true },
 		},
