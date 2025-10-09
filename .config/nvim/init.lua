@@ -25,12 +25,13 @@ vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to Declaration" 
 vim.diagnostic.config({ virtual_text = true, signs = { text = { " ", " ", " ", " " } } })
 vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, { desc = "Open diagnostic location list" })
 vim.cmd("packadd cfilter") -- filtering quickfix and location list
+vim.keymap.set("n", "<leader>q", "<cmd>cw<cr>", { desc = "Toggle quickfix list" })
+vim.keymap.set("n", "<leader>l", "<cmd>lw<cr>", { desc = "Toggle location list" })
 
 local plugins = { -- Plugins via Lazy Package Manager
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
-		lazy = false,
 		priority = 1000,
 		config = function()
 			vim.cmd.colorscheme("catppuccin")
