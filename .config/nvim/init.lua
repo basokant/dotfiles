@@ -48,7 +48,7 @@ local plugins = { -- Plugins via Lazy Package Manager
 		"nvim-mini/mini.diff",
 		lazy = false,
 		opts = { view = { style = "number" } },
-		keys = { { "<leader>ghp", "<cmd>lua MiniDiff.toggle_overlay()<cr>", desc = "Preview Hunk" } },
+		keys = { { "<leader>go", "<cmd>lua MiniDiff.toggle_overlay()<cr>", desc = "Toggle Git Overlay" } },
 	},
 	{
 		"nvim-mini/mini.clue",
