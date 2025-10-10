@@ -54,9 +54,9 @@ local plugins = { -- Plugins via Lazy Package Manager
 	},
 	{
 		"nvim-mini/mini.clue",
-		opts = function(_, opts)
+		config = function(_, _)
 			local gen_clues = require("mini.clue").gen_clues
-			vim.tbl_deep_extend("force", opts, {
+			require("mini.clue").setup({
 				triggers = {
 					{ mode = "n", keys = "<Leader>" },
 					{ mode = "n", keys = "g" },
@@ -147,6 +147,8 @@ local plugins = { -- Plugins via Lazy Package Manager
 		opts = {
 			ensure_installed = {
 				"lua_ls",
+				"ruff",
+				"pyright",
 				"denols",
 				"vtsls",
 				"astro",
