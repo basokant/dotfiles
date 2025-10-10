@@ -10,10 +10,6 @@ vim.opt.shiftwidth = 2 -- 2 spaces for tabs
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
 
-vim.schedule(function() -- Use system clipboard
-	vim.o.clipboard = "unnamedplus"
-end)
-
 vim.g.mapleader = " "
 vim.keymap.set({ "n", "v" }, "<C-d>", "<C-d>zz") -- recenter down motion
 vim.keymap.set({ "n", "v" }, "<C-u>", "<C-u>zz") -- recenter up motion
