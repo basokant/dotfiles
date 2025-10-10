@@ -64,6 +64,7 @@ local plugins = { -- Plugins via Lazy Package Manager
 					{ mode = "x", keys = "`" },
 					{ mode = "n", keys = '"' },
 					{ mode = "i", keys = "<C-r>" },
+					{ mode = "i", keys = "<C-x>" },
 					{ mode = "c", keys = "<C-r>" },
 					{ mode = "n", keys = "<C-w>" },
 					{ mode = "n", keys = "z" },
