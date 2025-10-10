@@ -9,6 +9,8 @@ end
 vim.opt.shiftwidth = 2 -- 2 spaces for tabs
 vim.opt.expandtab = true
 vim.opt.tabstop = 2
+vim.opt.softtabstop = -1
+vim.opt.smarttab = true
 
 vim.g.mapleader = " "
 vim.keymap.set({ "n", "v" }, "<C-d>", "<C-d>zz") -- recenter down motion
