@@ -26,6 +26,7 @@ vim.cmd("packadd cfilter") -- filtering quickfix and location list
 vim.keymap.set("n", "<leader>q", "<cmd>cw<cr>", { desc = "Open quickfix list" })
 vim.keymap.set("n", "<leader>l", "<cmd>lw<cr>", { desc = "Open location list" })
 
+---@type LazySpec[]
 local plugins = { -- Plugins via Lazy Package Manager
   {
     "catppuccin/nvim",
