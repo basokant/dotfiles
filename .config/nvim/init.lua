@@ -142,40 +142,16 @@ local plugins = { -- Plugins via Lazy Package Manager
   {
     "neovim/nvim-lspconfig",
     config = function()
-      local servers = {
-        "lua_ls",
-        "ruff",
-        "pyright",
-        -- "denols",
-        "vtsls",
-        "astro",
-        "emmet_language_server",
-        "gopls",
-        "zls",
-        "tinymist",
-        "marksman",
-        "vue_ls",
-        "svelte",
-      }
-
-      local vue_plugin = {
-        name = "@vue/typescript-plugin",
-        location = "/Users/basokant/Library/pnpm/global/5/node_modules/@vue/language-server",
-        languages = { "vue" },
-        configNamespace = "typescript",
-      }
-      vim.lsp.config("vtsls", { settings = { vtsls = { tsserver = { globalPlugins = { vue_plugin } } } } })
-      vim.lsp.enable(servers)
     end,
     "stevearc/conform.nvim", -- Formatting
     opts = {
-      formatters_by_ft = { lua = { "stylua" } },
+      formatters_by_ft = { },
       format_on_save = { timeout_ms = 500, lsp_format = "fallback" },
     },
   },
   {
     "saghen/blink.cmp", -- Completion engine
-    dependencies = { "rafamadriz/friendly-snippets", "folke/lazydev.nvim" },
+    dependencies = { "rafamadriz/friendly-snippets"},
     build = "cargo build --release",
     opts = {
       sources = {
@@ -199,3 +175,28 @@ if not vim.uv.fs_stat(lazypath) then -- Setup Lazy
 end
 vim.opt.rtp:prepend(lazypath) ---@diagnostic disable-line: undefined-field
 require("lazy").setup(plugins)
+
+local lsp_servers = {
+  "lua_ls",
+  "ruff",
+  "pyright",
+  -- "denols",
+  "vtsls",
+  "astro",
+  "emmet_language_server",
+  "gopls",
+  "zls",
+  "tinymist",
+  "marksman",
+  "vue_ls",
+  "svelte",
+}
+
+local vue_plugin = {
+  name = "@vue/typescript-plugin",
+  location = "/Users/basokant/Library/pnpm/global/5/node_modules/@vue/language-server",
+  languages = { "vue" },
+  configNamespace = "typescript",
+}
+vim.lsp.config("vtsls", { settings = { vtsls = { tsserver = { globalPlugins = { vue_plugin } } } } })
+vim.lsp.enable(lsp_servers)
