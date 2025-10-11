@@ -143,7 +143,54 @@ local plugins = { ---@type LazySpec[]
 			require("nvim-treesitter.configs").setup({ auto_install = true, highlight = { enable = true } })
 		end,
 	},
-	{ "neovim/nvim-lspconfig" },
+	{
+		"neovim/nvim-lspconfig",
+		lazy = false,
+		config = function()
+			local vue_plugin = {
+				name = "@vue/typescript-plugin",
+				location = "/Users/basokant/Library/pnpm/global/5/node_modules/@vue/language-server",
+				languages = { "vue" },
+				configNamespace = "typescript",
+			}
+
+			vim.lsp.config("vtsls", { -- Fix vtsls running on deno projects
+				root_dir = function(bufnr, on_dir)
+					local denoRootDir = require("lspconfig.util").root_pattern("deno.json", "deno.json")(bufnr)
+					if denoRootDir then
+						return nil
+					end
+					local root_markers = { "package.json", "yarn.lock", "pnpm-lock.yaml", "bun.lock" }
+					local project_root = vim.fs.root(bufnr, root_markers)
+					if not project_root then
+						return
+					end
+					on_dir(project_root)
+				end,
+				settings = { vtsls = { tsserver = { globalPlugins = { vue_plugin } } } },
+			})
+			vim.lsp.config( -- Fix denols running on typescript node projects
+				"denols",
+				{ workspace_required = true, root_markers = { "deno.json", "deno.jsonc", "deno.lock" } }
+			)
+
+			vim.lsp.enable({
+				"lua_ls",
+				"ruff",
+				"pyright",
+				"denols",
+				"vtsls",
+				"astro",
+				"emmet_language_server",
+				"gopls",
+				"zls",
+				"tinymist",
+				"marksman",
+				"vue_ls",
+				"svelte",
+			})
+		end,
+	},
 	{
 		"stevearc/conform.nvim", -- Formatting
 		opts = { ---@type conform.setupOpts
@@ -177,38 +224,3 @@ if not vim.uv.fs_stat(lazypath) then -- Setup Lazy
 end
 vim.opt.rtp:prepend(lazypath) ---@diagnostic disable-line: undefined-field
 require("lazy").setup(plugins)
-
-local lsp_servers = {
-	"lua_ls",
-	"ruff",
-	"pyright",
-	"denols",
-	"vtsls",
-	"astro",
-	"emmet_language_server",
-	"gopls",
-	"zls",
-	"tinymist",
-	"marksman",
-	"vue_ls",
-	"svelte",
-}
-
-local vue_plugin = {
-	name = "@vue/typescript-plugin",
-	location = "/Users/basokant/Library/pnpm/global/5/node_modules/@vue/language-server",
-	languages = { "vue" },
-	configNamespace = "typescript",
-}
-vim.lsp.config("vtsls", {
-	root_markers = { "package.json" },
-	workspace_required = true,
-	settings = {
-		vtsls = { tsserver = { globalPlugins = { vue_plugin } } },
-	},
-})
-vim.lsp.config("denols", {
-	workspace_required = true,
-	root_markers = { "deno.json", "deno.jsonc" },
-})
-vim.lsp.enable(lsp_servers)
