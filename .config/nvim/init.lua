@@ -6,11 +6,10 @@ if vim.fn.executable("rg") == 1 then -- Use rg for grep
 	vim.opt.grepformat = "%f:%l:%c:%m,%f:%l:%m"
 end
 
-vim.opt.shiftwidth = 2 -- 2 spaces for tabs
 vim.opt.expandtab = true
+vim.opt.smartindent = true
 vim.opt.tabstop = 2
-vim.opt.softtabstop = -1
-vim.opt.smarttab = true
+vim.opt.shiftwidth = 2
 
 vim.g.mapleader = " "
 vim.keymap.set({ "n", "v" }, "<C-d>", "<C-d>zz") -- recenter down motion
@@ -45,6 +44,7 @@ local plugins = { ---@type LazySpec[]
 	{ "nvim-mini/mini.tabline", opts = {} },
 	{
 		"nvim-mini/mini.files",
+		lazy = false,
 		opts = {},
 		keys = { { "<leader>e", "<cmd>lua MiniFiles.open()<cr>", desc = "File Explorer" } },
 	},
@@ -124,7 +124,7 @@ local plugins = { ---@type LazySpec[]
 			header = " ",
 			footer = "",
 			items = {
-				{ name = "Find File  ", action = "Pick files", section = "" },
+				{ name = "Search File  ", action = "Pick files", section = "" },
 				{ name = "Grep Live  ", action = "Pick grep_live", section = "" },
 				{ name = "New File  ", action = "ene | startinsert", section = "" },
 				{ name = "Recent Files  ", action = "Pick oldfiles", section = "" },
@@ -150,8 +150,7 @@ local plugins = { ---@type LazySpec[]
 			local vue_plugin = {
 				name = "@vue/typescript-plugin",
 				location = "/Users/basokant/Library/pnpm/global/5/node_modules/@vue/language-server",
-				languages = { "vue" },
-				configNamespace = "typescript",
+				languages = { "vue", "javascript", "typescript" },
 			}
 
 			vim.lsp.config("vtsls", { -- Fix vtsls running on deno projects
@@ -167,7 +166,16 @@ local plugins = { ---@type LazySpec[]
 					end
 					on_dir(project_root)
 				end,
-				settings = { vtsls = { tsserver = { globalPlugins = { vue_plugin } } } },
+				settings = { vtsls = { enableFormatter = false, tsserver = { globalPlugins = { vue_plugin } } } },
+				filetypes = {
+					"javascript",
+					"typescript",
+					"vue",
+					"javascriptreact",
+					"javascript.jsx",
+					"typescriptreact",
+					"typescript.tsx",
+				},
 			})
 			vim.lsp.config( -- Fix denols running on typescript node projects
 				"denols",
@@ -183,6 +191,7 @@ local plugins = { ---@type LazySpec[]
 				"astro",
 				"emmet_language_server",
 				"gopls",
+				"eslint",
 				"zls",
 				"tinymist",
 				"marksman",
@@ -194,7 +203,12 @@ local plugins = { ---@type LazySpec[]
 	{
 		"stevearc/conform.nvim", -- Formatting
 		opts = { ---@type conform.setupOpts
-			formatters_by_ft = { lua = { "stylua" } },
+			formatters_by_ft = {
+				lua = { "stylua" },
+				javascript = { "prettier" },
+				typescript = { "prettier" },
+				vue = { "prettier" },
+			},
 			format_on_save = { timeout_ms = 500, lsp_format = "fallback" },
 		},
 	},
