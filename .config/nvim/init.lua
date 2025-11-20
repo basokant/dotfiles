@@ -191,6 +191,7 @@ local plugins = { ---@type LazySpec[]
 				"astro",
 				"emmet_language_server",
 				"gopls",
+				"golangci_lint_ls",
 				"eslint",
 				"zls",
 				"tinymist",
