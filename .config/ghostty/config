@@ -1,4 +1,3 @@
-theme = "Catppuccin Mocha"
 font-size = 15
-
 custom-shader = shaders/smear-cursor.glsl
+config-file = ?auto/theme.ghostty
