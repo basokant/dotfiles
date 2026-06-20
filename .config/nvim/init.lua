@@ -26,14 +26,14 @@ vim.keymap.set("n", "<leader>q", "<cmd>cw<cr>", { desc = "Open quickfix list" })
 vim.keymap.set("n", "<leader>l", "<cmd>lw<cr>", { desc = "Open location list" })
 
 local plugins = { ---@type LazySpec[]
-	{
-		"catppuccin/nvim",
-		name = "catppuccin",
-		priority = 1000,
-		config = function()
-			vim.cmd.colorscheme("catppuccin")
-		end,
-	},
+  {
+    "electron-highlighter/nvim",
+    lazy = false,
+    priotity = 1000,
+    config = function(_, _)
+      vim.cmd.colorscheme("electron_highlighter")
+    end
+  },
 	{ "nvim-mini/mini.basics", opts = {} },
 	{ "nvim-mini/mini.icons", opts = {} },
 	{ "nvim-mini/mini.ai", opts = {} },
@@ -137,13 +137,6 @@ local plugins = { ---@type LazySpec[]
 		},
 	},
 	{
-		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate",
-		init = function() ---@diagnostic disable-next-line: missing-fields
-			require("nvim-treesitter.configs").setup({ auto_install = true, highlight = { enable = true } })
-		end,
-	},
-	{
 		"neovim/nvim-lspconfig",
 		lazy = false,
 		config = function()
@@ -215,9 +208,9 @@ local plugins = { ---@type LazySpec[]
 	},
 	{
 		"saghen/blink.cmp", -- Completion engine
-		dependencies = { "rafamadriz/friendly-snippets" },
-		build = "cargo build --release",
-		opts = { ---@type blink.cmp.Config
+		dependencies = { "saghen/blink.lib", "rafamadriz/friendly-snippets" },
+	  build = function() require('blink.cmp').build():pwait() end,
+		opts = { ---@module 'blink.cmp' ---@type blink.cmp.Config
 			sources = {
 				default = { "lsp", "path", "snippets" },
 			},
