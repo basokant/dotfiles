@@ -11,15 +11,3 @@ end
 # Go
 set -g GOPATH $HOME/go
 set -gx PATH $GOPATH/bin $PATH
-
-# Prompt
-starship init fish | source
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-if test -f /Users/basokant/miniconda3/bin/conda
-    eval /Users/basokant/miniconda3/bin/conda "shell.fish" hook $argv | source
-end
-# <<< conda initialize <<<
-
-alias love="/Applications/love.app/Contents/MacOS/love"
