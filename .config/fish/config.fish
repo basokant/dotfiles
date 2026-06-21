@@ -10,4 +10,11 @@ end
 
 # Go
 set -g GOPATH $HOME/go
-set -gx PATH $GOPATH/bin $PATH
+fish_add_path $GOPATH/bin
+
+# pnpm
+set -gx PNPM_HOME "/Users/basokant/Library/pnpm"
+fish_add_path "$PNPM_HOME/bin"
+
+# uv
+fish_add_path "/Users/basokant/.local/bin"
